@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+import axios from "axios";
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 import HttpsIcon from "@mui/icons-material/Https";
 
@@ -7,11 +8,27 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const[error,setError]=useState("");
-  // const[sucess,setSucess]=useState("");
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(username);
-    console.log(password);
+  const [success,setSuccess]=useState("");
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    // console.log(username);
+    // console.log(password);
+    try{
+      const response=await axios.post('http://localhost:1000/user/login',{
+        username,
+        password,
+      });
+      if(response.data.error){
+        setError(response.data.error);
+      }else{
+        setSuccess('Signin Successful!');
+        setError(" ");
+      }
+    }
+    catch(error){
+      console.error("Signin error:",error);
+      setError("An error occured. Please try again");
+    }
   };
   return (
     <div>
@@ -60,7 +77,7 @@ function Login() {
           </form>
         </div>
         {error && <p className="error">{error}</p>}
-        {/* {success && <p className="success">{sucess}</p>} */}
+        {success && <p className="success">{success}</p>}
       </div>
     </div>
   );

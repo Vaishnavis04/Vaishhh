@@ -1,5 +1,6 @@
 import React,{useState}from 'react'
 import './App.css'; 
+import axios from "axios";
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 import HttpsIcon from '@mui/icons-material/Https';
 
@@ -8,13 +9,30 @@ function Signup() {
   const [username,setUsername]= useState("");
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
-  const handleSubmit =(event)=>{
-    event.preventDefault();
-    console.log(email);
-    console.log(username);
-    
-    console.log(password);
-  }
+  const [error,setError]=useState("");
+  const [success,setSuccess]=useState("");
+  const handleSubmit =async(e)=>{
+    e.preventDefault();
+    // console.log(email);
+    // console.log(username);
+    // console.log(password);
+    try{
+      const response=await axios.post('http://localhost:1000/user',{
+        email,
+        username,
+        password,
+      });
+      if (response.data.error) {
+        setError(response.data.error);
+      } else {
+        setSuccess('Signup successful!');
+        setError(""); 
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      setError("An error occurred. Please try again.");
+    }
+  };
   return (
     <div>
         <div class="container">
@@ -58,6 +76,8 @@ function Signup() {
                 
                 </div>
               </form>
+              {error && <p className='error'>{error}</p>}
+              {success && <p className='success'>{success}</p>}
             </div>
   
         </div>
