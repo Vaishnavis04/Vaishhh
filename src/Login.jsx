@@ -11,8 +11,12 @@ function Login() {
   const [success,setSuccess]=useState("");
   const handleSubmit = async(e) => {
     e.preventDefault();
-    // console.log(username);
-    // console.log(password);
+    if(!username || !password){
+      setError("Username and password are required");
+      return;
+    }
+    console.log(username);
+    console.log(password);
     try{
       const response=await axios.post('http://localhost:1000/user/login',{
         username,
@@ -20,14 +24,22 @@ function Login() {
       });
       if(response.data.error){
         setError(response.data.error);
+        setSuccess("");
       }else{
         setSuccess('Signin Successful!');
-        setError(" ");
+        setError("");
       }
     }
     catch(error){
       console.error("Signin error:",error);
-      setError("An error occured. Please try again");
+      if(error.response){
+        console.error("Response data:",error.response.data);
+        setError(error.response.data.message || "An error occured.Please try again");
+
+      }else{
+        setError("An error occured");
+      }
+      setSuccess("");
     }
   };
   return (
@@ -41,7 +53,12 @@ function Login() {
               type="username"
               placeholder="enter your username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setError("");
+                setSuccess("");
+              }
+              }
             ></input><br/>
 
             <label htmlFor="password">Password:</label>
@@ -49,7 +66,12 @@ function Login() {
               type="password"
               placeholder="enter your password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+                setSuccess("");
+              }
+              }
             ></input>
             <HttpsIcon className="icon" />
 
