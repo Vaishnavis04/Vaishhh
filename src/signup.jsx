@@ -141,10 +141,7 @@ function Signup() {
               <label>
                 <input type="checkbox"/> Remember me
               </label>
-              <br/>
-              <a href="#">Forgot Password</a>
             </div>
-            <br/><br/>
             <div className="Signup">
               <button type="submit">Signup</button>
             </div>
